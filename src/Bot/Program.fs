@@ -2,6 +2,7 @@
 open DSharpPlus
 open DSharpPlus.Entities
 open DSharpPlus.SlashCommands
+open Microsoft.Extensions.DependencyInjection
 open dotenv.net
 open Microsoft.Extensions.Configuration
 
@@ -21,15 +22,22 @@ let config =
 type CommandTest() =
     inherit ApplicationCommandModule()
 
+    member val Configuration: Configuration = { DiscordToken = ""; GuildId = 0UL } with get, set
+
+
     [<SlashCommand("test", "Testing slash command")>]
     member public this.Test(ctx: InteractionContext) =
         task {
             do!
                 ctx.CreateResponseAsync(
                     InteractionResponseType.ChannelMessageWithSource,
-                    DiscordInteractionResponseBuilder().WithContent("Test")
+                    DiscordInteractionResponseBuilder()
+                        .WithContent(this.Configuration.GuildId.ToString())
                 )
         }
+
+let serviceProvider =
+    ServiceCollection().AddSingleton<Configuration>(config).BuildServiceProvider()
 
 let client =
     new DiscordClient(
@@ -40,7 +48,9 @@ let client =
         )
     )
 
-let slash = client.UseSlashCommands()
+let slash =
+    client.UseSlashCommands(SlashCommandsConfiguration(Services = serviceProvider))
+
 slash.RegisterCommands<CommandTest>(config.GuildId)
 
 client.add_MessageCreated (fun _ evt -> task { printfn $"{evt.Message.Content}" })
