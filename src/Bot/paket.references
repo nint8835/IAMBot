@@ -1,0 +1,4 @@
+dotenv.net
+FSharp.Core
+Microsoft.Extensions.Configuration
+Microsoft.Extensions.Hosting

@@ -1,2 +1,14 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
-printfn "Hello from F#"
+﻿open dotenv.net
+open Microsoft.Extensions.Configuration
+
+type Configuration = { DiscordToken: string }
+
+DotEnv.Load()
+
+let config =
+    ConfigurationBuilder()
+        .AddEnvironmentVariables("IAM_")
+        .Build()
+        .Get<Configuration>()
+
+printf $"{config.DiscordToken}"
