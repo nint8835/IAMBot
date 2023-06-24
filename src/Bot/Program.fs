@@ -1,13 +1,9 @@
 ﻿open System.Threading.Tasks
-open Discord
-open Discord.Interactions
-open Discord.WebSocket
-open Microsoft.Extensions.DependencyInjection
+open DSharpPlus
+open DSharpPlus.Entities
+open DSharpPlus.SlashCommands
 open dotenv.net
 open Microsoft.Extensions.Configuration
-
-let Log (msg: LogMessage) : Task = task { printfn $"%s{msg.ToString()}" }
-
 
 type Configuration =
     { DiscordToken: string
@@ -21,51 +17,36 @@ let config =
         .Build()
         .Get<Configuration>()
 
-type public CommandTest() =
-    inherit InteractionModuleBase<InteractionContext>()
 
-    [<SlashCommand("test", "Get a test response")>]
-    member public this.Test() =
-        task { do! this.Context.Interaction.RespondAsync "Pong!" }
+type CommandTest() =
+    inherit ApplicationCommandModule()
 
+    [<SlashCommand("test", "Testing slash command")>]
+    member public this.Test(ctx: InteractionContext) =
+        task {
+            do!
+                ctx.CreateResponseAsync(
+                    InteractionResponseType.ChannelMessageWithSource,
+                    DiscordInteractionResponseBuilder().WithContent("Test")
+                )
+        }
 
-let socketConfig = DiscordSocketConfig()
-socketConfig.GatewayIntents <- GatewayIntents.AllUnprivileged ||| GatewayIntents.MessageContent
+let client =
+    new DiscordClient(
+        DiscordConfiguration(
+            Token = config.DiscordToken,
+            TokenType = TokenType.Bot,
+            Intents = (DiscordIntents.AllUnprivileged ||| DiscordIntents.MessageContents)
+        )
+    )
 
-let serviceProvider =
-    ServiceCollection()
-        .AddSingleton(socketConfig)
-        .AddSingleton<DiscordSocketClient>()
-        .AddSingleton<InteractionService>()
-        .BuildServiceProvider()
+let slash = client.UseSlashCommands()
+slash.RegisterCommands<CommandTest>(config.GuildId)
 
-let client = serviceProvider.GetService<DiscordSocketClient>()
-let interactionService = serviceProvider.GetService<InteractionService>()
-
-client.add_Log Log
-client.add_MessageReceived (fun msg -> task { printfn $"%s{msg.Content}" })
-
-client.add_Ready (fun _ ->
-    task {
-        let! commands = interactionService.RegisterCommandsToGuildAsync(config.GuildId, true)
-        printfn $"{commands}"
-
-        printfn "Commands registered"
-    })
-
-client.add_InteractionCreated (fun interaction ->
-    task {
-        let ctx = SocketInteractionContext(client, interaction)
-        interactionService.ExecuteCommandAsync(ctx, serviceProvider) |> Task.WaitAll
-    })
+client.add_MessageCreated (fun _ evt -> task { printfn $"{evt.Message.Content}" })
 
 task {
-    do! client.LoginAsync(TokenType.Bot, config.DiscordToken)
-
-    let! result = interactionService.AddModuleAsync<CommandTest>(serviceProvider)
-    printfn $"%A{result.SlashCommands}"
-
-    do! client.StartAsync()
+    do! client.ConnectAsync()
     do! Task.Delay -1
 }
 |> Task.WaitAll
