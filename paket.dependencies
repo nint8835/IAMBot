@@ -6,6 +6,7 @@ framework: auto-detect
 # https://github.com/fsprojects/Paket/issues/3972
 nuget FSharp.Core
 
-nuget dotenv.net
-nuget Microsoft.Extensions.Configuration
-nuget Microsoft.Extensions.Hosting
+nuget dotenv.net ~> 3.1
+nuget Microsoft.Extensions.Configuration ~> 7.0
+nuget Microsoft.Extensions.Hosting ~> 7.0.1
+nuget Discord.Net ~> 3.10
