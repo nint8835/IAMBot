@@ -4,9 +4,8 @@ open Discord.WebSocket
 open dotenv.net
 open Microsoft.Extensions.Configuration
 
-let Log (msg: LogMessage) : Task =
-    printfn $"%s{msg.ToString()}"
-    Task.CompletedTask
+let Log (msg: LogMessage) : Task = task { printfn $"%s{msg.ToString()}" }
+
 
 type Configuration = { DiscordToken: string }
 
@@ -24,14 +23,11 @@ socketConfig.GatewayIntents <- GatewayIntents.AllUnprivileged ||| GatewayIntents
 let client = new DiscordSocketClient(socketConfig)
 client.add_Log Log
 
-client.add_MessageReceived (fun msg ->
-    printfn $"%s{msg.Content}"
-    Task.CompletedTask)
+client.add_MessageReceived (fun msg -> task { printfn $"%s{msg.Content}" })
 
-client.LoginAsync(TokenType.Bot, config.DiscordToken)
-|> Async.AwaitTask
-|> Async.RunSynchronously
-
-client.StartAsync() |> Async.AwaitTask |> Async.RunSynchronously
-
-Task.Delay -1 |> Async.AwaitTask |> Async.RunSynchronously
+task {
+    do! client.LoginAsync(TokenType.Bot, config.DiscordToken)
+    do! client.StartAsync()
+    do! Task.Delay -1
+}
+|> Task.WaitAll
