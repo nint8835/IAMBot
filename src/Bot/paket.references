@@ -3,3 +3,4 @@ FSharp.Core
 Microsoft.Extensions.Configuration
 Microsoft.Extensions.Hosting
 Discord.Net
+Microsoft.Extensions.DependencyInjection
