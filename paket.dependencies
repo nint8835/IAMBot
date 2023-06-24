@@ -9,5 +9,6 @@ nuget FSharp.Core
 nuget DSharpPlus ~> 4.4
 nuget DSharpPlus.SlashCommands ~> 4.4
 nuget dotenv.net ~> 3.1
+nuget FSharp.Json ~> 0.4.1
 nuget Microsoft.Extensions.Configuration ~> 7.0
 nuget Microsoft.Extensions.Hosting ~> 7.0.1

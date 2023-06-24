@@ -5,6 +5,7 @@ open DSharpPlus.SlashCommands
 open Microsoft.Extensions.DependencyInjection
 open dotenv.net
 open Microsoft.Extensions.Configuration
+open IAMBot.IAMReference
 
 type Configuration =
     { DiscordToken: string
@@ -23,6 +24,7 @@ type CommandTest() =
     inherit ApplicationCommandModule()
 
     member val Configuration: Configuration = { DiscordToken = ""; GuildId = 0UL } with get, set
+    member val ReferenceFile: ReferenceFile = [||] with get, set
 
 
     [<SlashCommand("test", "Testing slash command")>]
@@ -32,12 +34,17 @@ type CommandTest() =
                 ctx.CreateResponseAsync(
                     InteractionResponseType.ChannelMessageWithSource,
                     DiscordInteractionResponseBuilder()
-                        .WithContent(this.Configuration.GuildId.ToString())
+                        .WithContent(this.ReferenceFile.[0].Actions.[0].Description)
                 )
         }
 
+let reference = Reference.Load() |> Async.RunSynchronously
+
 let serviceProvider =
-    ServiceCollection().AddSingleton<Configuration>(config).BuildServiceProvider()
+    ServiceCollection()
+        .AddSingleton<Configuration>(config)
+        .AddSingleton<ReferenceFile>(reference)
+        .BuildServiceProvider()
 
 let client =
     new DiscordClient(

@@ -17,6 +17,8 @@ NUGET
       DSharpPlus (>= 4.4.2)
       Microsoft.Extensions.DependencyInjection (>= 5.0.1)
     FSharp.Core (7.0.300)
+    FSharp.Json (0.4.1)
+      FSharp.Core (>= 4.6.2)
     Microsoft.Extensions.Configuration (7.0)
       Microsoft.Extensions.Configuration.Abstractions (>= 7.0)
       Microsoft.Extensions.Primitives (>= 7.0)
