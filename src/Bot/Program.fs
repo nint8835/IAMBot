@@ -28,13 +28,18 @@ type CommandTest() =
 
 
     [<SlashCommand("test", "Testing slash command")>]
-    member public this.Test(ctx: InteractionContext) =
+    member public this.Test
+        (ctx: InteractionContext)
+        ([<Option("prefix", "Service prefix to look up")>] prefix: string)
+        =
+        let service =
+            this.ReferenceFile |> Array.find (fun service -> service.Prefix = prefix)
+
         task {
             do!
                 ctx.CreateResponseAsync(
                     InteractionResponseType.ChannelMessageWithSource,
-                    DiscordInteractionResponseBuilder()
-                        .WithContent(this.ReferenceFile.[0].Actions.[0].Description)
+                    DiscordInteractionResponseBuilder().WithContent(service.ServiceName)
                 )
         }
 

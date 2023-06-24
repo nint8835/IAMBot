@@ -40,6 +40,7 @@ type Action =
 
 type Service =
     { [<JsonField("prefix")>]
+      // TODO: Enum?
       Prefix: string
       [<JsonField("conditions")>]
       Conditions: Condition[]
