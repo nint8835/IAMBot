@@ -12,5 +12,7 @@ module Reference =
                 client.GetStringAsync("https://raw.githubusercontent.com/iann0036/iam-dataset/main/iam_definition.json")
                 |> Async.AwaitTask
 
-            return Json.deserialize<ReferenceFile> response
+            let config = JsonConfig.create (jsonFieldNaming = Json.snakeCase)
+
+            return Json.deserializeEx<ReferenceFile> config response
         }
