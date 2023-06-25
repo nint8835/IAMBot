@@ -1,7 +1,7 @@
 ﻿open System.Threading.Tasks
 open DSharpPlus
-open DSharpPlus.Entities
 open DSharpPlus.SlashCommands
+open IAMBot.Commands
 open Microsoft.Extensions.DependencyInjection
 open dotenv.net
 open Microsoft.Extensions.Configuration
@@ -19,29 +19,6 @@ let config =
         .Build()
         .Get<Configuration>()
 
-
-type CommandTest() =
-    inherit ApplicationCommandModule()
-
-    member val Configuration: Configuration = { DiscordToken = ""; GuildId = 0UL } with get, set
-    member val ReferenceFile: ReferenceFile = [||] with get, set
-
-
-    [<SlashCommand("test", "Testing slash command")>]
-    member public this.Test
-        (ctx: InteractionContext)
-        ([<Option("prefix", "Service prefix to look up")>] prefix: string)
-        =
-        let service =
-            this.ReferenceFile |> Array.find (fun service -> service.Prefix = prefix)
-
-        task {
-            do!
-                ctx.CreateResponseAsync(
-                    InteractionResponseType.ChannelMessageWithSource,
-                    DiscordInteractionResponseBuilder().WithContent(service.ServiceName)
-                )
-        }
 
 let reference = Reference.Load() |> Async.RunSynchronously
 
@@ -63,7 +40,7 @@ let client =
 let slash =
     client.UseSlashCommands(SlashCommandsConfiguration(Services = serviceProvider))
 
-slash.RegisterCommands<CommandTest>(config.GuildId)
+slash.RegisterCommands<ActionCommands>(config.GuildId)
 
 client.add_MessageCreated (fun _ evt -> task { printfn $"{evt.Message.Content}" })
 
