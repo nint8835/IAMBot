@@ -8,7 +8,8 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lib\IAMReference\IAMReference.fsproj" />
+    <ProjectReference Include="..\Lib\IAMBot.IAMReference\IAMBot.IAMReference.fsproj" />
+    <ProjectReference Include="..\Lib\IAMBot.Commands\IAMBot.Commands.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
