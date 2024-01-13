@@ -9,7 +9,9 @@ module Reference =
             use client = new HttpClient()
 
             let! response =
-                client.GetStringAsync("https://raw.githubusercontent.com/iann0036/iam-dataset/main/iam_definition.json")
+                client.GetStringAsync(
+                    "https://raw.githubusercontent.com/iann0036/iam-dataset/main/aws/iam_definition.json"
+                )
                 |> Async.AwaitTask
 
             let config = JsonConfig.create (jsonFieldNaming = Json.snakeCase)
