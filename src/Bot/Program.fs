@@ -1,10 +1,11 @@
-﻿open System.Threading.Tasks
-open DSharpPlus
+﻿open DSharpPlus
 open DSharpPlus.SlashCommands
-open IAMBot.Commands
-open Microsoft.Extensions.DependencyInjection
-open dotenv.net
 open Microsoft.Extensions.Configuration
+open Microsoft.Extensions.DependencyInjection
+open System.Threading.Tasks
+open dotenv.net
+
+open IAMBot.Commands
 open IAMBot.IAMReference
 
 type Configuration =
@@ -32,20 +33,12 @@ let main (_: string[]) =
             .BuildServiceProvider()
 
     let client =
-        new DiscordClient(
-            DiscordConfiguration(
-                Token = config.DiscordToken,
-                TokenType = TokenType.Bot,
-                Intents = (DiscordIntents.AllUnprivileged ||| DiscordIntents.MessageContents)
-            )
-        )
+        new DiscordClient(DiscordConfiguration(Token = config.DiscordToken, TokenType = TokenType.Bot))
 
     let slash =
         client.UseSlashCommands(SlashCommandsConfiguration(Services = serviceProvider))
 
     slash.RegisterCommands<ActionCommands>(config.GuildId)
-
-    client.add_MessageCreated (fun _ evt -> task { printfn $"{evt.Message.Content}" })
 
     task {
         do! client.ConnectAsync()

@@ -1,7 +1,7 @@
 ﻿namespace IAMBot.IAMReference
 
-open System.Net.Http
 open FSharp.Json
+open System.Net.Http
 
 module Reference =
     let Load () : Async<ReferenceFile> =

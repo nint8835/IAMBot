@@ -1,10 +1,11 @@
 namespace IAMBot.Commands
 
-open System.Collections.Generic
-open System.Threading.Tasks
 open DSharpPlus
 open DSharpPlus.Entities
 open DSharpPlus.SlashCommands
+open System.Collections.Generic
+open System.Threading.Tasks
+
 open IAMBot.IAMReference
 
 type PrefixAutocompleteProvider() =
