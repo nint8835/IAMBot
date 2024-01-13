@@ -43,7 +43,7 @@ type ActionAutocompleteProvider() =
                 |> Array.filter (fun (_, action) ->
                     enteredText.Length = 0 || action.Action.ToLower().Contains enteredText)
                 |> Array.map snd
-                |> Array.map (fun action -> action.Action)
+                |> Array.map (_.Action)
                 |> Array.distinct
                 |> Array.map (fun action -> DiscordAutoCompleteChoice(action, action))
                 |> Array.truncate 10
