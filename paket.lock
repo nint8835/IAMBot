@@ -1,9 +1,9 @@
 STORAGE: NONE
-RESTRICTION: == net7.0
+RESTRICTION: || (== net7.0) (== net8.0)
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    dotenv.net (3.1.2)
-    DSharpPlus (4.4.2)
+    dotenv.net (3.1.3)
+    DSharpPlus (4.4.6)
       Microsoft.Extensions.Logging.Abstractions (>= 5.0)
       Newtonsoft.Json (>= 13.0.2)
       System.Collections.Immutable (>= 7.0)
@@ -13,10 +13,10 @@ NUGET
       System.Net.WebSockets.Client (>= 4.3.2)
       System.Runtime.InteropServices.RuntimeInformation (>= 4.3)
       System.Threading.Channels (>= 5.0)
-    DSharpPlus.SlashCommands (4.4.2)
-      DSharpPlus (>= 4.4.2)
+    DSharpPlus.SlashCommands (4.4.6)
+      DSharpPlus (>= 4.4.6)
       Microsoft.Extensions.DependencyInjection (>= 5.0.1)
-    FSharp.Core (7.0.300)
+    FSharp.Core (8.0.101)
     FSharp.Json (0.4.1)
       FSharp.Core (>= 4.6.2)
     Microsoft.Extensions.Configuration (7.0)
